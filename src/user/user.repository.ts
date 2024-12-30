@@ -61,15 +61,16 @@ export class UserRepository {
     }  }
   
 
-  async verifyEmailWithToken(email: string): Promise<User | null> {
+  async verifyEmailWithToken(email: string): Promise<string> {
     const connection = await this.getConnection();
     const [result] = await connection.execute(
       "UPDATE users SET verified_email = TRUE WHERE email = ? AND verified_email = FALSE",
       [email],
     );
-    if (result.affectedRows === 0) {
-        return null;
-      }
-    return result as any;
+    // const updateResult = result as any;
+    // if (updateResult.affectedRows === 0) {
+    //     return null;
+    //   }
+    return email;
   }
 }

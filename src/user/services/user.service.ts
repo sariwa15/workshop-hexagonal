@@ -59,9 +59,8 @@ export class UserService {
     if (!payload) {
       return null;
     }
-    const updateResult = await this.userRepository.verifyEmailWithToken(payload.email);
-   
-
-    return this.getUser(updateResult?.email);
+    const updateResult = await this.userRepository.verifyEmailWithToken(payload.email) ;
+    
+    return this.getUser(updateResult);
   }
 }

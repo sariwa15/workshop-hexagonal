@@ -52,7 +52,6 @@ export class TokenService {
       if (payload.expiresAt < Date.now()) {
         return null;
       }
-
       return payload;
     } catch (error) {
       return null;
