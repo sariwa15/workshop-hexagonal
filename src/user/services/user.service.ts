@@ -4,24 +4,25 @@ import { User } from "../interfaces/user.interface";
 import { TokenService } from "./token.service";
 import { EmailService } from "./email.service";
 import { RowDataPacket } from "mysql2";
-import {ConfigService} from "../../config/config.service";
 import * as mysql from "mysql2/promise";
+import { ConfigService } from "@nestjs/config";
+import { Config } from 'src/config/config.interface';
 
 @Injectable()
 export class UserService {
   constructor(
-    private configService: ConfigService,
+    private configService: ConfigService<Config, true>,
     private tokenService: TokenService,
     private emailService: EmailService,
   ) {}
 
   private async getConnection() {
     const connectionConfig = {
-      host: process.env.DB_HOST || "localhost",
-      user: process.env.DB_USER || "root",
-      port: Number.parseInt(process.env.DB_PORT || "3306"),
-      password: process.env.DB_PASSWORD || "root",
-      database: process.env.DB_NAME || "user_service",
+      host: this.configService.get('host'),
+      user: this.configService.get('user'),
+      port: this.configService.get('port'),
+      password: this.configService.get('password'),
+      database: this.configService.get('database'),
     };
     return mysql.createConnection(connectionConfig);
   }

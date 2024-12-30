@@ -9,4 +9,10 @@ export interface Config {
   sendgridApiKey: string;
   sendgridFromEmail: string;
   sendgridFromName: string;
+
+  host: string;
+  user: string;
+  port: number;
+  password: string;
+  database: string;
 }

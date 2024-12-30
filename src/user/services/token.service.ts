@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { ConfigService } from "../../config/config.service";
+import { ConfigService } from "@nestjs/config";
 import * as crypto from "crypto";
+import { Config } from "src/config/config.interface";
 
 interface TokenPayload {
   email: string;
@@ -13,16 +14,14 @@ export class TokenService {
   private readonly key: Buffer;
   private readonly iv: Buffer;
 
-  constructor(private configService: ConfigService) {
-    const config = this.configService.get();
-    this.key = crypto.scryptSync(config.tokenEncryptionKey, "salt", 32);
-    this.iv = Buffer.from(config.tokenEncryptionIV);
+  constructor(private configService: ConfigService<Config, true>) {
+    this.key = crypto.scryptSync(configService.get('tokenEncryptionKey'), "salt", 32);
+    this.iv = Buffer.from(configService.get('tokenEncryptionIV'));
   }
 
   createVerificationToken(email: string): string {
-    const config = this.configService.get();
     const expiresAt =
-      Date.now() + config.verificationTokenExpiryDays * 24 * 60 * 60 * 1000;
+      Date.now() + this.configService.get('verificationTokenExpiryDays') * 24 * 60 * 60 * 1000;
 
     const payload: TokenPayload = { email, expiresAt };
 
